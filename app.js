@@ -748,6 +748,8 @@ function renderBookshelf() {
   }
 
   // ── 渲染 ────────────────────────────────────
+  const RAINBOW = ['#ff6b6b','#ff9f43','#feca57','#54a0ff','#5f27cd','#1dd1a1','#ff6348'];
+
   function renderTimeline() {
     timeline.innerHTML = '';
     if (books.length === 0) return;
@@ -1035,7 +1037,7 @@ function renderBookshelf() {
 
   // ── 启动 + 窗口变化重算 ────────────────────
   async function init() {
-    await loadBooks();
+    try { await loadBooks(); } catch (_) { books = []; }
     refreshAll();
     window.addEventListener('resize', () => { if (!focusedId) refreshAll(); });
   }
