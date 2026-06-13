@@ -231,7 +231,7 @@ html,body{
 (function(){
     const video = document.getElementById('bgVideo');
     const isMobile = window.innerWidth < GATE_MOBILE_BREAKPOINT;
-    const src = GATE_VIDEO_PC;
+    const src = isMobile ? GATE_VIDEO_MOBILE : GATE_VIDEO_PC;
 
     // 设置 poster 回退图
     video.setAttribute('poster', GATE_VIDEO_POSTER);
@@ -243,6 +243,7 @@ html,body{
     source.type = 'video/mp4';
     video.appendChild(source);
     video.load();
+    video.play().catch(function(){});
 
     // 视频加载失败时保留 poster 可见
     video.addEventListener('error', function(){
@@ -251,7 +252,10 @@ html,body{
 })();
 
 // pointerdown 兼容桌面 + 移动端（无 300ms 延迟）
+var _gateFading = false;
 document.body.addEventListener('pointerdown', function(){
+    if (_gateFading) return;
+    _gateFading = true;
 
     // 标记已通过大门，避免 index.html 回跳
     sessionStorage.setItem('passed_gate', '1');
