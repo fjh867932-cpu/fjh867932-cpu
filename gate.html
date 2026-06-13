@@ -1,348 +1,55 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>NorthFrame</title>
-
-<!-- 视频资源配置 -->
-<script src="gate-config.js"></script>
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:"Segoe UI",sans-serif;
-    cursor:pointer;
-}
-
-/* ---- 视频背景 ---- */
-
-#bgVideo{
-    position:fixed;
-    inset:0;
-
-    width:100%;
-    height:100%;
-    object-fit:cover;
-
-    opacity:0;
-    transition:opacity .8s ease;
-
-    z-index:0;
-
-    /* poster 可见期间轻微缩放 */
-    transform:scale(1.05);
-    animation:slowZoom 25s ease-in-out infinite alternate;
-
-    background:#000; /* 视频未加载时的底色 */
-}
-
-/* 视频淡入后取消 zoom（可选：保留 zoom 可注释下面这行） */
-#bgVideo.playing{
-    /* animation 保持 slowZoom；若想去掉 zoom 改 none */
-}
-
-/* ---- 回退静态背景 ---- */
-
-.fallback-bg{
-    position:fixed;
-    inset:0;
-    z-index:0;
-
-    background-image:url("assets/gate-bg.jpg");
-    background-size:cover;
-    background-position:center center;
-    background-repeat:no-repeat;
-
-    transform:scale(1.05);
-    animation:slowZoom 25s ease-in-out infinite alternate;
-
-    display:none; /* 默认隐藏，视频 error 时才显示 */
-}
-
-/* 暗化层 */
-
-.overlay{
-    position:fixed;
-    inset:0;
-
-    background:
-    linear-gradient(
-        rgba(0,0,0,.55),
-        rgba(0,0,0,.35),
-        rgba(0,0,0,.65)
-    );
-
-    backdrop-filter:blur(2px);
-}
-
-/* 内容 */
-
-.content{
-    position:absolute;
-
-    top:50%;
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    text-align:center;
-
-    z-index:10;
-
-    width:90%;
-}
-
-.logo{
-
-    font-size:clamp(40px,7vw,90px);
-
-    font-weight:700;
-
-    color:white;
-
-    letter-spacing:10px;
-
-    text-shadow:
-    0 0 20px #8ec5ff,
-    0 0 40px #6aa7ff;
-
-    animation:breathe 4s ease infinite;
-}
-
-.subtitle{
-
-    margin-top:18px;
-
-    font-size:clamp(14px,2vw,22px);
-
-    color:rgba(255,255,255,.75);
-
-    letter-spacing:4px;
-}
-
-.enter{
-
-    margin-top:50px;
-
-    font-size:14px;
-
-    color:rgba(255,255,255,.6);
-
-    letter-spacing:3px;
-
-    animation:flash 2.5s infinite;
-}
-
-.corner{
-
-    position:fixed;
-
-    bottom:30px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    color:rgba(255,255,255,.4);
-
-    font-size:12px;
-
-    letter-spacing:2px;
-}
-
-/* 淡出 */
-
-.fadeout{
-    animation:fadeOut .9s forwards;
-}
-
-@keyframes breathe{
-
-    0%{
-        opacity:.8;
-    }
-
-    50%{
-        opacity:1;
-    }
-
-    100%{
-        opacity:.8;
-    }
-}
-
-@keyframes flash{
-
-    50%{
-        opacity:.3;
-    }
-}
-
-@keyframes slowZoom{
-
-    from{
-        transform:scale(1.05);
-    }
-
-    to{
-        transform:scale(1.15);
-    }
-}
-
-@keyframes fadeOut{
-
-    to{
-        opacity:0;
-        transform:scale(1.03);
-    }
-}
-
-/* 手机优化 */
-
-@media (max-width:768px){
-
-    .logo{
-        letter-spacing:5px;
-    }
-
-    .subtitle{
-        font-size:14px;
-    }
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>huiwu.com</title>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(180deg,#f8f9fd 0%,#eef2f8 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:48px}
+    .rings{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+    .ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;border:1.5px solid;animation:spin linear infinite}
+    .ring:nth-child(1){width:min(240px,55vw);height:min(240px,55vw);border-color:rgba(123,148,255,.12);animation-duration:35s}
+    .ring:nth-child(2){width:min(320px,70vw);height:min(320px,70vw);border-color:rgba(123,148,255,.08);animation-direction:reverse;animation-duration:45s}
+    .ring:nth-child(3){width:min(160px,40vw);height:min(160px,40vw);border-color:rgba(123,148,255,.15);animation-duration:25s}
+    @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+    .core{position:relative;z-index:10;text-align:center;animation:fadeUp .8s ease}
+    .core .icon{margin-bottom:20px;display:inline-block}
+    .core .icon svg{width:56px;height:56px;color:#7b94ff;opacity:.7}
+    .core h1{font-size:clamp(26px,5vw,36px);font-weight:600;letter-spacing:.15em;color:#2d3047;margin-bottom:6px}
+    .core .tag{font-size:clamp(11px,1.5vw,13px);color:#8a8fa8;letter-spacing:.25em;margin-bottom:56px}
+    .core .hint{font-size:12px;color:rgba(123,148,255,.5);letter-spacing:.1em;animation:breathe 3s ease-in-out infinite}
+    @keyframes breathe{0%,100%{opacity:.4}50%{opacity:.9}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .flash{position:fixed;inset:0;background:#fff;z-index:999;opacity:0;pointer-events:none;transition:opacity .6s ease}
+    .flash.go{opacity:.9;transition:opacity .3s ease}
+  </style>
 </head>
-
 <body>
-
-<!-- 视频背景 -->
-<video
-    id="bgVideo"
-    muted
-    loop
-    playsinline
-    preload="metadata"
-    poster="assets/gate-bg.jpg"
-></video>
-
-<!-- 视频加载失败回退 -->
-<div class="fallback-bg" id="fallbackBg"></div>
-
-<div class="overlay" id="overlay"></div>
-
-<div class="content" id="content">
-
-    <div class="logo">
-        NorthFrame
+  <div class="gate" id="gate">
+    <div class="rings">
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
     </div>
-
-    <div class="subtitle">
-        PRIVATE DIGITAL WORKSPACE
+    <div class="core">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <rect x="3" y="3" width="18" height="18" rx="4"/>
+          <circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>
+        </svg>
+      </div>
+      <h1>huiwu.com</h1>
+      <div class="tag">Private Digital Workspace</div>
+      <div class="hint">触碰以进入</div>
     </div>
-
-    <div class="enter">
-        TAP ANYWHERE TO ENTER
-    </div>
-
-</div>
-
-<div class="corner">
-    CLICK TO CONTINUE
-</div>
-
-<script>
-
-/* ==========================================
-   Gate 视频背景控制器
-   ========================================== */
-
-const video    = document.getElementById('bgVideo');
-const fallback = document.getElementById('fallbackBg');
-
-let currentType = null;   // 'pc' | 'mobile' | null
-let resizeTimer = null;
-
-/* ---- 工具：判断当前设备类型 ---- */
-function getVideoType() {
-    return window.innerWidth < GATE_MOBILE_BREAKPOINT ? 'mobile' : 'pc';
-}
-
-/* ---- 加载指定类型视频 ---- */
-function loadVideo(type) {
-
-    // 已加载同类型，跳过
-    if (type === currentType) return;
-    currentType = type;
-
-    const src = type === 'mobile' ? GATE_VIDEO_MOBILE : GATE_VIDEO_PC;
-
-    // 隐藏视频，等待 canplay 后再淡入
-    video.classList.remove('playing');
-    video.style.opacity = '0';
-    video.src = src;
-    video.load();
-
-    // 尝试播放（muted + playsinline 可在移动端自动播放）
-    video.play().catch(() => {});
-}
-
-/* ---- 根据当前设备设置视频源 ---- */
-function setVideoSource() {
-    const type = getVideoType();
-    loadVideo(type);
-}
-
-/* ---- 事件：视频可播放 → 淡入 ---- */
-video.addEventListener('canplay', () => {
-    video.style.opacity = '1';
-    video.classList.add('playing');
-});
-
-/* ---- 事件：视频加载失败 → 回退静态图 ---- */
-video.addEventListener('error', () => {
-    video.style.display = 'none';
-    fallback.style.display = 'block';
-    currentType = null;
-});
-
-/* ---- 窗口尺寸 / 方向变化 → 自动切换 ---- */
-function onViewportChange() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-        setVideoSource();
-    }, 300);
-}
-
-window.addEventListener('resize', onViewportChange);
-window.addEventListener('orientationchange', onViewportChange);
-
-/* ---- 初始化 ---- */
-setVideoSource();
-
-/* ---- 点击 → 通过大门 ---- */
-document.body.addEventListener('click', () => {
-
-    // 标记已通过大门，避免 index.html 回跳
-    sessionStorage.setItem('passed_gate', '1');
-
-    document.body.classList.add('fadeout');
-
-    setTimeout(() => {
-        window.location.href = 'verify.html';
-    }, 900);
-});
-
-</script>
-
+  </div>
+  <div class="flash" id="flash"></div>
+  <script>
+    document.getElementById('gate').addEventListener('click',()=>{
+      sessionStorage.setItem('passed_gate','true');
+      document.getElementById('flash').classList.add('go');
+      setTimeout(()=>{window.location.href='/index.html'},500);
+    });
+  </script>
 </body>
 </html>
