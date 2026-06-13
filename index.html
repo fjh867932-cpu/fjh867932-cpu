@@ -1,3 +1,10 @@
+<script>
+    // 强制检查：是否通过了大门页面
+    if (!sessionStorage.getItem("passed_gate")) {
+        window.location.href = "/gate.html";
+    }
+</script>
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

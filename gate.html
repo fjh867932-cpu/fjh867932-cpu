@@ -1,44 +1,211 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>huiwu.com — Gateway</title>
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html,body{width:100%;height:100%;overflow:hidden;background:#050816;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
-    .gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:40px}
-    .ring{position:absolute;width:min(300px,60vw);height:min(300px,60vw);border-radius:50%;border:1px solid rgba(0,245,255,.08);animation:spin 30s linear infinite;pointer-events:none}
-    .ring:nth-child(2){width:min(400px,75vw);height:min(400px,75vw);border-color:rgba(122,92,255,.06);animation-direction:reverse;animation-duration:40s}
-    .ring:nth-child(3){width:min(200px,40vw);height:min(200px,40vw);border-color:rgba(0,245,255,.1);animation-duration:20s}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,245,255,.015) 2px,rgba(0,245,255,.015) 4px);pointer-events:none;z-index:2}
-    .core{position:relative;z-index:10;text-align:center}
-    .core h1{font-size:clamp(28px,6vw,42px);font-weight:300;letter-spacing:.3em;color:#00F5FF;text-shadow:0 0 40px rgba(0,245,255,.15)}
-    .core .tag{font-size:clamp(11px,2vw,13px);color:rgba(122,92,255,.6);letter-spacing:.4em;margin:8px 0 60px}
-    .core .hint{font-size:11px;color:rgba(0,245,255,.35);letter-spacing:.15em;animation:pulse 2.5s infinite}
-    @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
-    .flash{position:fixed;inset:0;background:#fff;z-index:999;opacity:0;pointer-events:none;transition:opacity .5s}
-    .flash.go{opacity:.8;transition:opacity .2s}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATEWAY - 进入系统</title>
+    <style>
+        :root {
+            --bg-color-1: #050816;
+            --bg-color-2: #0B1026;
+            --primary-color: #00F5FF;
+            --secondary-color: #7A5CFF;
+            --accent-color: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            cursor: pointer;
+        }
+
+        /* 赛博网格与扫描线背景（高级感，非花哨） */
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(18, 24, 58, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(18, 24, 58, 0.2) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 1;
+        }
+
+        .background-overlay::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 2;
+            background-size: 100% 4px, 6px 100%;
+        }
+
+        /* 扫描线动画 */
+        .scanline {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to bottom, transparent, var(--primary-color), transparent);
+            opacity: 0.1;
+            position: absolute;
+            animation: scan 6s linear infinite;
+            z-index: 2;
+        }
+
+        /* 中央核心门户区 */
+        .portal-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 3;
+            width: 90%;
+            max-width: 600px;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* 仪式感外圈 */
+        .gate-ring {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 40px;
+            border: 2px dashed rgba(0, 245, 255, 0.3);
+            border-top: 2px solid var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: rotateRing 20s linear infinite;
+            position: relative;
+            box-shadow: 0 0 30px rgba(122, 92, 255, 0.1);
+        }
+
+        .gate-ring::before {
+            content: '';
+            width: 85%;
+            height: 85%;
+            border: 1px double rgba(122, 92, 255, 0.4);
+            border-radius: 50%;
+            position: absolute;
+            animation: rotateRingInner 10s linear infinite reverse;
+        }
+
+        .gate-core {
+            width: 30px;
+            height: 30px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* 网站名称 */
+        .system-title {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.5rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 245, 255, 0.6);
+        }
+
+        .system-subtitle {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            letter-spacing: 0.3rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 50px;
+        }
+
+        /* 提示点击交互 */
+        .interaction-prompt {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            letter-spacing: 0.2rem;
+            animation: blink 2.5s infinite;
+        }
+
+        /* 动画定义 */
+        @keyframes scan {
+            0% { top: -5%; }
+            100% { top: 105%; }
+        }
+        @keyframes rotateRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes rotateRingInner {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 25px var(--primary-color), 0 0 50px var(--primary-color); }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; color: var(--primary-color); }
+        }
+
+        /* 退出过渡动画类 */
+        .fade-out {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.1);
+            filter: blur(10px);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .system-title { font-size: 1.8rem; letter-spacing: 0.3rem; }
+            .system-subtitle { font-size: 0.8rem; letter-spacing: 0.2rem; }
+            .gate-ring { width: 160px; height: 160px; margin-bottom: 30px; }
+        }
+    </style>
 </head>
 <body>
-  <div class="gate" id="gate">
-    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
-    <div class="scan"></div>
-    <div class="core">
-      <h1>huiwu.com</h1>
-      <div class="tag">Private Digital Workspace</div>
-      <div class="hint">触碰以进入</div>
+
+    <div class="background-overlay"></div>
+    <div class="scanline"></div>
+
+    <div class="portal-container" id="portalContainer">
+        <div class="gate-ring">
+            <div class="gate-core"></div>
+        </div>
+        <h1 class="system-title">CYBER SYSTEM</h1>
+        <div class="system-subtitle">Secured Digital Gateway</div>
+        <div class="interaction-prompt">// 点击任意区域初始化身份验证 //</div>
     </div>
-  </div>
-  <div class="flash" id="flash"></div>
-  <script>
-    document.getElementById('gate').addEventListener('click',()=>{
-      sessionStorage.setItem('passed_gate','true');
-      document.getElementById('flash').classList.add('go');
-      setTimeout(()=>{window.location.href='/index.html'},400);
-    });
-  </script>
+
+    <script>
+        document.addEventListener('click', function() {
+            const container = document.getElementById('portalContainer');
+            
+            // 激活退出动画
+            container.classList.add('fade-out');
+
+            // 写入 Session 状态并延时跳转（提供 0.8 秒过渡期）
+            sessionStorage.setItem("passed_gate", "true");
+            
+            setTimeout(function() {
+                window.location.href = "/index.html";
+            }, 800);
+        });
+    </script>
 </body>
 </html>
