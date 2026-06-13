@@ -6,6 +6,9 @@
 
 <title>NorthFrame</title>
 
+<!-- 视频资源配置 -->
+<script src="gate-config.js"></script>
+
 <style>
 
 *{
@@ -22,21 +25,49 @@ html,body{
     cursor:pointer;
 }
 
-/* 背景 */
+/* ---- 视频背景 ---- */
 
-.background{
+#bgVideo{
     position:fixed;
     inset:0;
 
-    background-image:url("assets/gate-bg.jpg");
+    width:100%;
+    height:100%;
+    object-fit:cover;
 
+    opacity:0;
+    transition:opacity .8s ease;
+
+    z-index:0;
+
+    /* poster 可见期间轻微缩放 */
+    transform:scale(1.05);
+    animation:slowZoom 25s ease-in-out infinite alternate;
+
+    background:#000; /* 视频未加载时的底色 */
+}
+
+/* 视频淡入后取消 zoom（可选：保留 zoom 可注释下面这行） */
+#bgVideo.playing{
+    /* animation 保持 slowZoom；若想去掉 zoom 改 none */
+}
+
+/* ---- 回退静态背景 ---- */
+
+.fallback-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+
+    background-image:url("assets/gate-bg.jpg");
     background-size:cover;
     background-position:center center;
     background-repeat:no-repeat;
 
     transform:scale(1.05);
-
     animation:slowZoom 25s ease-in-out infinite alternate;
+
+    display:none; /* 默认隐藏，视频 error 时才显示 */
 }
 
 /* 暗化层 */
@@ -194,7 +225,18 @@ html,body{
 
 <body>
 
-<div class="background" id="bg"></div>
+<!-- 视频背景 -->
+<video
+    id="bgVideo"
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster="assets/gate-bg.jpg"
+></video>
+
+<!-- 视频加载失败回退 -->
+<div class="fallback-bg" id="fallbackBg"></div>
 
 <div class="overlay" id="overlay"></div>
 
@@ -220,16 +262,84 @@ html,body{
 
 <script>
 
-document.body.addEventListener("click",()=>{
+/* ==========================================
+   Gate 视频背景控制器
+   ========================================== */
 
-    document.body.classList.add("fadeout");
+const video    = document.getElementById('bgVideo');
+const fallback = document.getElementById('fallbackBg');
 
-    setTimeout(()=>{
+let currentType = null;   // 'pc' | 'mobile' | null
+let resizeTimer = null;
 
-        window.location.href="verify.html";
+/* ---- 工具：判断当前设备类型 ---- */
+function getVideoType() {
+    return window.innerWidth < GATE_MOBILE_BREAKPOINT ? 'mobile' : 'pc';
+}
 
-    },900);
+/* ---- 加载指定类型视频 ---- */
+function loadVideo(type) {
 
+    // 已加载同类型，跳过
+    if (type === currentType) return;
+    currentType = type;
+
+    const src = type === 'mobile' ? GATE_VIDEO_MOBILE : GATE_VIDEO_PC;
+
+    // 隐藏视频，等待 canplay 后再淡入
+    video.classList.remove('playing');
+    video.style.opacity = '0';
+    video.src = src;
+    video.load();
+
+    // 尝试播放（muted + playsinline 可在移动端自动播放）
+    video.play().catch(() => {});
+}
+
+/* ---- 根据当前设备设置视频源 ---- */
+function setVideoSource() {
+    const type = getVideoType();
+    loadVideo(type);
+}
+
+/* ---- 事件：视频可播放 → 淡入 ---- */
+video.addEventListener('canplay', () => {
+    video.style.opacity = '1';
+    video.classList.add('playing');
+});
+
+/* ---- 事件：视频加载失败 → 回退静态图 ---- */
+video.addEventListener('error', () => {
+    video.style.display = 'none';
+    fallback.style.display = 'block';
+    currentType = null;
+});
+
+/* ---- 窗口尺寸 / 方向变化 → 自动切换 ---- */
+function onViewportChange() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        setVideoSource();
+    }, 300);
+}
+
+window.addEventListener('resize', onViewportChange);
+window.addEventListener('orientationchange', onViewportChange);
+
+/* ---- 初始化 ---- */
+setVideoSource();
+
+/* ---- 点击 → 通过大门 ---- */
+document.body.addEventListener('click', () => {
+
+    // 标记已通过大门，避免 index.html 回跳
+    sessionStorage.setItem('passed_gate', '1');
+
+    document.body.classList.add('fadeout');
+
+    setTimeout(() => {
+        window.location.href = 'verify.html';
+    }, 900);
 });
 
 </script>
