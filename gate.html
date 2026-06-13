@@ -1,211 +1,238 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GATEWAY - 进入系统</title>
-    <style>
-        :root {
-            --bg-color-1: #050816;
-            --bg-color-2: #0B1026;
-            --primary-color: #00F5FF;
-            --secondary-color: #7A5CFF;
-            --accent-color: #FFFFFF;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
+<title>NorthFrame</title>
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 100%);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            cursor: pointer;
-        }
+<style>
 
-        /* 赛博网格与扫描线背景（高级感，非花哨） */
-        .background-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(rgba(18, 24, 58, 0.2) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(18, 24, 58, 0.2) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 1;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        .background-overlay::after {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            z-index: 2;
-            background-size: 100% 4px, 6px 100%;
-        }
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:"Segoe UI",sans-serif;
+    cursor:pointer;
+}
 
-        /* 扫描线动画 */
-        .scanline {
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(to bottom, transparent, var(--primary-color), transparent);
-            opacity: 0.1;
-            position: absolute;
-            animation: scan 6s linear infinite;
-            z-index: 2;
-        }
+/* 背景 */
 
-        /* 中央核心门户区 */
-        .portal-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 3;
-            width: 90%;
-            max-width: 600px;
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+.background{
+    position:fixed;
+    inset:0;
 
-        /* 仪式感外圈 */
-        .gate-ring {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 40px;
-            border: 2px dashed rgba(0, 245, 255, 0.3);
-            border-top: 2px solid var(--primary-color);
-            border-bottom: 2px solid var(--secondary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: rotateRing 20s linear infinite;
-            position: relative;
-            box-shadow: 0 0 30px rgba(122, 92, 255, 0.1);
-        }
+    background-image:url("assets/gate-bg.jpg");
 
-        .gate-ring::before {
-            content: '';
-            width: 85%;
-            height: 85%;
-            border: 1px double rgba(122, 92, 255, 0.4);
-            border-radius: 50%;
-            position: absolute;
-            animation: rotateRingInner 10s linear infinite reverse;
-        }
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
 
-        .gate-core {
-            width: 30px;
-            height: 30px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color);
-            animation: pulse 2s ease-in-out infinite;
-        }
+    transform:scale(1.05);
 
-        /* 网站名称 */
-        .system-title {
-            color: var(--accent-color);
-            font-size: 2.5rem;
-            font-weight: 300;
-            letter-spacing: 0.5rem;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            text-shadow: 0 0 15px rgba(0, 245, 255, 0.6);
-        }
+    animation:slowZoom 25s ease-in-out infinite alternate;
+}
 
-        .system-subtitle {
-            color: var(--secondary-color);
-            font-size: 0.9rem;
-            letter-spacing: 0.3rem;
-            text-transform: uppercase;
-            opacity: 0.8;
-            margin-bottom: 50px;
-        }
+/* 暗化层 */
 
-        /* 提示点击交互 */
-        .interaction-prompt {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.8rem;
-            letter-spacing: 0.2rem;
-            animation: blink 2.5s infinite;
-        }
+.overlay{
+    position:fixed;
+    inset:0;
 
-        /* 动画定义 */
-        @keyframes scan {
-            0% { top: -5%; }
-            100% { top: 105%; }
-        }
-        @keyframes rotateRing {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes rotateRingInner {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 25px var(--primary-color), 0 0 50px var(--primary-color); }
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; color: var(--primary-color); }
-        }
+    background:
+    linear-gradient(
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.35),
+        rgba(0,0,0,.65)
+    );
 
-        /* 退出过渡动画类 */
-        .fade-out {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(1.1);
-            filter: blur(10px);
-        }
+    backdrop-filter:blur(2px);
+}
 
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .system-title { font-size: 1.8rem; letter-spacing: 0.3rem; }
-            .system-subtitle { font-size: 0.8rem; letter-spacing: 0.2rem; }
-            .gate-ring { width: 160px; height: 160px; margin-bottom: 30px; }
-        }
-    </style>
+/* 内容 */
+
+.content{
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    text-align:center;
+
+    z-index:10;
+
+    width:90%;
+}
+
+.logo{
+
+    font-size:clamp(40px,7vw,90px);
+
+    font-weight:700;
+
+    color:white;
+
+    letter-spacing:10px;
+
+    text-shadow:
+    0 0 20px #8ec5ff,
+    0 0 40px #6aa7ff;
+
+    animation:breathe 4s ease infinite;
+}
+
+.subtitle{
+
+    margin-top:18px;
+
+    font-size:clamp(14px,2vw,22px);
+
+    color:rgba(255,255,255,.75);
+
+    letter-spacing:4px;
+}
+
+.enter{
+
+    margin-top:50px;
+
+    font-size:14px;
+
+    color:rgba(255,255,255,.6);
+
+    letter-spacing:3px;
+
+    animation:flash 2.5s infinite;
+}
+
+.corner{
+
+    position:fixed;
+
+    bottom:30px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:rgba(255,255,255,.4);
+
+    font-size:12px;
+
+    letter-spacing:2px;
+}
+
+/* 淡出 */
+
+.fadeout{
+    animation:fadeOut .9s forwards;
+}
+
+@keyframes breathe{
+
+    0%{
+        opacity:.8;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:.8;
+    }
+}
+
+@keyframes flash{
+
+    50%{
+        opacity:.3;
+    }
+}
+
+@keyframes slowZoom{
+
+    from{
+        transform:scale(1.05);
+    }
+
+    to{
+        transform:scale(1.15);
+    }
+}
+
+@keyframes fadeOut{
+
+    to{
+        opacity:0;
+        transform:scale(1.03);
+    }
+}
+
+/* 手机优化 */
+
+@media (max-width:768px){
+
+    .logo{
+        letter-spacing:5px;
+    }
+
+    .subtitle{
+        font-size:14px;
+    }
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="background-overlay"></div>
-    <div class="scanline"></div>
+<div class="background" id="bg"></div>
 
-    <div class="portal-container" id="portalContainer">
-        <div class="gate-ring">
-            <div class="gate-core"></div>
-        </div>
-        <h1 class="system-title">CYBER SYSTEM</h1>
-        <div class="system-subtitle">Secured Digital Gateway</div>
-        <div class="interaction-prompt">// 点击任意区域初始化身份验证 //</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="content" id="content">
+
+    <div class="logo">
+        NorthFrame
     </div>
 
-    <script>
-        document.addEventListener('click', function() {
-            const container = document.getElementById('portalContainer');
-            
-            // 激活退出动画
-            container.classList.add('fade-out');
+    <div class="subtitle">
+        PRIVATE DIGITAL WORKSPACE
+    </div>
 
-            // 写入 Session 状态并延时跳转（提供 0.8 秒过渡期）
-            sessionStorage.setItem("passed_gate", "true");
-            
-            setTimeout(function() {
-                window.location.href = "/index.html";
-            }, 800);
-        });
-    </script>
+    <div class="enter">
+        TAP ANYWHERE TO ENTER
+    </div>
+
+</div>
+
+<div class="corner">
+    CLICK TO CONTINUE
+</div>
+
+<script>
+
+document.body.addEventListener("click",()=>{
+
+    document.body.classList.add("fadeout");
+
+    setTimeout(()=>{
+
+        window.location.href="verify.html";
+
+    },900);
+
+});
+
+</script>
+
 </body>
 </html>
