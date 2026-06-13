@@ -231,7 +231,7 @@ html,body{
 (function(){
     const video = document.getElementById('bgVideo');
     const isMobile = window.innerWidth < GATE_MOBILE_BREAKPOINT;
-    const src = isMobile ? GATE_VIDEO_MOBILE : GATE_VIDEO_PC;
+    const src = GATE_VIDEO_PC;
 
     // 设置 poster 回退图
     video.setAttribute('poster', GATE_VIDEO_POSTER);
@@ -260,7 +260,7 @@ document.body.addEventListener('pointerdown', function(){
 
     setTimeout(function(){
 
-        window.location.href = 'index.html';
+        window.location.href = '/index.html';
 
     }, 900);
 
