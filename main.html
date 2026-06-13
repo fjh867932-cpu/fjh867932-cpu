@@ -4,7 +4,7 @@
     // 强制检查：防止绕过验证直接访问主站
     // 如果你已有的 登录状态 或 Token 变量名不同，可以在此处加到并集条件中
     if (!localStorage.getItem("verified")) {
-        window.location.href = "/index.html";
+        window.location.href = "index.html";
     }
 </script>
 
@@ -61,7 +61,7 @@
 
   <script>
     // 门禁检查
-    if(!localStorage.getItem('verified')){window.location.href='/index.html'}
+    if(!localStorage.getItem('verified')){window.location.href='index.html'}
   </script>
   <script src="app.js"></script>
 </body>

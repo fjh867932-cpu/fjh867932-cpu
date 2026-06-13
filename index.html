@@ -39,8 +39,8 @@
     const AUTH_FN_URL='https://wwqqvfnuxpddhgwuwiut.supabase.co/functions/v1/smart-handler';
     const AUTH_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3cXF2Zm51eHBkZGhnd3V3aXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NzAwNDcsImV4cCI6MjA5NjI0NjA0N30.eCfxc2WeXkpJiMXRCzydwmFE3Z6UMk3aqOdrhdzZbug';
 
-    if(!sessionStorage.getItem('passed_gate')){window.location.href='/gate.html'}
-    (function(){const s=localStorage.getItem('huiwu_session');if(s){try{const{time}=JSON.parse(s);if(Date.now()-time<259200000){window.location.href='/main.html';return}}catch(_){}}})();
+    if(!sessionStorage.getItem('passed_gate')){window.location.href='gate.html'}
+    (function(){const s=localStorage.getItem('huiwu_session');if(s){try{const{time}=JSON.parse(s);if(Date.now()-time<259200000){window.location.href='main.html';return}}catch(_){}}})();
 
     document.getElementById('gb').onclick=async()=>{
       const k=document.getElementById('gk').value.trim();if(!k)return;

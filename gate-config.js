@@ -14,8 +14,8 @@
  */
 
 /* ---- 视频源 ---- */
-const GATE_VIDEO_PC     = "https://wwqqvfnuxpddhgwuwiut.supabase.co/storage/v1/object/public/video/PC.mp4";
-const GATE_VIDEO_MOBILE = "https://wwqqvfnuxpddhgwuwiut.supabase.co/storage/v1/object/public/video/MOBILE.mp4";
+const GATE_VIDEO_PC     = "https://wwqqvfnuxpddhgwuwiut.supabase.co/storage/v1/object/public/video/P.mp4";
+const GATE_VIDEO_MOBILE = "https://wwqqvfnuxpddhgwuwiut.supabase.co/storage/v1/object/public/video/mobile.mp4";
 
 /* ---- 静态回退图（视频加载失败 / 未加载时显示）---- */
 const GATE_VIDEO_POSTER = "assets/gate-bg.jpg";
