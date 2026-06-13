@@ -22,21 +22,26 @@ html,body{
     cursor:pointer;
 }
 
-/* 背景 */
+/* 背景视频 */
 
-.background{
+.bg-video{
     position:fixed;
     inset:0;
 
-    background-image:url("assets/gate-bg.jpg");
+    width:100%;
+    height:100%;
 
-    background-size:cover;
-    background-position:center center;
-    background-repeat:no-repeat;
+    object-fit:cover;
+    object-position:center center;
 
     transform:scale(1.05);
 
     animation:slowZoom 25s ease-in-out infinite alternate;
+
+    /* 视频加载前 / 失败时显示 poster */
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
 }
 
 /* 暗化层 */
@@ -194,7 +199,7 @@ html,body{
 
 <body>
 
-<div class="background" id="bg"></div>
+<video class="bg-video" id="bgVideo" autoplay muted loop playsinline preload="auto"></video>
 
 <div class="overlay" id="overlay"></div>
 
@@ -219,20 +224,45 @@ html,body{
     give me enough time
 </div>
 
+<script src="gate-config.js"></script>
 <script>
 
-document.body.addEventListener("click",()=>{
+// ---- 根据设备选择视频源 ----
+(function(){
+    const video = document.getElementById('bgVideo');
+    const isMobile = window.innerWidth < GATE_MOBILE_BREAKPOINT;
+    const src = isMobile ? GATE_VIDEO_MOBILE : GATE_VIDEO_PC;
+
+    // 设置 poster 回退图
+    video.setAttribute('poster', GATE_VIDEO_POSTER);
+    video.style.backgroundImage = 'url(' + GATE_VIDEO_POSTER + ')';
+
+    // 加载视频
+    const source = document.createElement('source');
+    source.src = src;
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    video.load();
+
+    // 视频加载失败时保留 poster 可见
+    video.addEventListener('error', function(){
+        video.style.backgroundImage = 'url(' + GATE_VIDEO_POSTER + ')';
+    });
+})();
+
+// pointerdown 兼容桌面 + 移动端（无 300ms 延迟）
+document.body.addEventListener('pointerdown', function(){
 
     // 标记已通过大门，避免 index.html 回跳
     sessionStorage.setItem('passed_gate', '1');
 
-    document.body.classList.add("fadeout");
+    document.body.classList.add('fadeout');
 
-    setTimeout(()=>{
+    setTimeout(function(){
 
-        window.location.href="index.html";
+        window.location.href = 'index.html';
 
-    },900);
+    }, 900);
 
 });
 
