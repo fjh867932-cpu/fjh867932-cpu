@@ -223,11 +223,14 @@ html,body{
 
 document.body.addEventListener("click",()=>{
 
+    // 标记已通过大门，避免 index.html 回跳
+    sessionStorage.setItem('passed_gate', '1');
+
     document.body.classList.add("fadeout");
 
     setTimeout(()=>{
 
-        window.location.href="verify.html";
+        window.location.href="index.html";
 
     },900);
 
