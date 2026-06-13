@@ -8,17 +8,17 @@
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(180deg,#f8f9fd 0%,#eef2f8 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;-webkit-tap-highlight-color:transparent}
     .page{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-    .panel{text-align:center;width:min(360px,85vw);padding:40px 32px;border-radius:28px;background:#f6f7fb;box-shadow:12px 12px 24px rgba(0,0,0,.06),-12px -12px 24px #fff;animation:fadeUp .5s ease}
+    .panel{text-align:center;width:min(360px,85vw);padding:40px 32px;border-radius:24px;background:#f6f7fb;box-shadow:12px 12px 24px rgba(0,0,0,.08),-12px -12px 24px rgba(255,255,255,.9);animation:fadeUp .5s ease}
     .panel .icon{margin-bottom:16px;display:inline-flex;width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#9bb3ff,#7b94ff);align-items:center;justify-content:center;opacity:.85}
     .panel .icon svg{width:24px;height:24px;color:#fff}
     .panel h1{font-size:20px;font-weight:600;letter-spacing:.3px;color:#2d3047;margin-bottom:4px}
     .panel .sub{font-size:11px;color:#8a8fa8;letter-spacing:.5px;margin-bottom:24px}
-    .panel input{width:100%;padding:12px 16px;font-size:15px;border:none;border-radius:14px;text-align:center;outline:none;background:#f6f7fb;box-shadow:inset 3px 3px 7px rgba(0,0,0,.05),inset -3px -3px 7px #fff;color:#2d3047;letter-spacing:1px;transition:box-shadow .3s}
-    .panel input:focus{box-shadow:inset 3px 3px 7px rgba(123,148,255,.1),inset -3px -3px 7px #fff}
+    .panel input{width:100%;padding:12px 16px;font-size:15px;border:none;border-radius:14px;text-align:center;outline:none;background:#f6f7fb;box-shadow:inset 3px 3px 7px rgba(0,0,0,.06),inset -3px -3px 7px rgba(255,255,255,.9);color:#2d3047;letter-spacing:1px;transition:box-shadow .4s}
+    .panel input:focus{box-shadow:inset 3px 3px 7px rgba(123,148,255,.12),inset -3px -3px 7px rgba(255,255,255,.9)}
     .panel input::placeholder{color:rgba(138,143,168,.35)}
-    .panel button{width:100%;padding:12px;margin-top:16px;font-size:14px;font-weight:600;letter-spacing:.5px;border:none;border-radius:14px;cursor:pointer;background:linear-gradient(135deg,#9bb3ff,#7b94ff);color:#fff;opacity:.85;transition:transform .2s,opacity .2s,box-shadow .2s;box-shadow:3px 3px 8px rgba(123,148,255,.15)}
+    .panel button{width:100%;padding:12px;margin-top:16px;font-size:14px;font-weight:600;letter-spacing:.5px;border:none;border-radius:14px;cursor:pointer;background:linear-gradient(135deg,#9bb3ff,#7b94ff);color:#fff;opacity:.85;transition:transform .4s ease,opacity .4s ease,box-shadow .4s ease;box-shadow:3px 3px 8px rgba(123,148,255,.15)}
     .panel button:hover{transform:translateY(-2px);opacity:1}.panel button:active{transform:scale(.97)}
-    .panel .err{color:#e05555;font-size:12px;margin-top:12px;display:none;animation:fadeUp .3s ease}
+    .panel .err{color:#e05555;font-size:12px;margin-top:12px;display:none;animation:fadeUp .4s ease}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
   </style>
 </head>

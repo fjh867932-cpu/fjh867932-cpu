@@ -71,8 +71,8 @@ const $ = (sel, ctx) => (ctx || document).querySelector(sel);
 
 const routes = {
   '': renderHome, 'info': renderInfo, 'info/notes': renderWall, 'info/reply': renderChat,
-  'info/collect': () => renderPlaceholder('信息收集', '搜集、整理、归纳，构建你的知识库。', '🔍'),
-  'history': () => renderPlaceholder('历史记录', '更多记录功能即将上线。', '📜'),
+  'info/collect': () => renderPlaceholder('信息收集', '搜集、整理、归纳，构建你的知识库。', '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'),
+  'history': () => renderPlaceholder('历史记录', '更多记录功能即将上线。', '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'),
 };
 const navbarTitles = { '': 'huiwu.com', 'info': '信息板块', 'info/notes': '信息记载', 'info/reply': '信息回复', 'info/collect': '信息收集', 'history': '历史记录' };
 
@@ -84,14 +84,14 @@ function handleRoute() { const r = getRoute(); updateNavbar(r); const fn = route
 window.addEventListener('hashchange', handleRoute); navBack.addEventListener('click', goBack);
 
 function renderHome() {
-  view.innerHTML = `<div class="page-home"><div class="home-hero"><h1>huiwu.com</h1><p>记录碎片灵感 · 解答学习困惑 · 收集万千信息</p></div><div class="home-cards"><div class="home-card" data-nav="info"><div class="home-card-icon info">📋</div><div class="home-card-body"><h3>信息板块</h3><p>便签记载 · AI对话 · 信息收集</p></div><span class="home-card-arrow">›</span></div><div class="home-card" data-nav="history"><div class="home-card-icon history">📜</div><div class="home-card-body"><h3>历史记录</h3><p>书籍阅读 · 日常记录 · 时间线回顾</p></div><span class="home-card-arrow">›</span></div></div></div>`;
+  view.innerHTML = `<div class="page-home"><div class="home-hero"><h1>huiwu.com</h1><p>记录碎片灵感 · 解答学习困惑 · 收集万千信息</p></div><div class="home-cards"><div class="home-card" data-nav="info"><div class="home-card-icon info"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><line x1="12" y1="11" x2="16" y2="11"/><line x1="8" y1="11" x2="10" y2="11"/><line x1="12" y1="15" x2="16" y2="15"/><line x1="8" y1="15" x2="10" y2="15"/></svg></div><div class="home-card-body"><h3>信息板块</h3><p>便签记载 · AI对话 · 信息收集</p></div><span class="home-card-arrow">›</span></div><div class="home-card" data-nav="history"><div class="home-card-icon history"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="home-card-body"><h3>历史记录</h3><p>书籍阅读 · 日常记录 · 时间线回顾</p></div><span class="home-card-arrow">›</span></div></div></div>`;
   view.querySelectorAll('.home-card').forEach(c => c.addEventListener('click', () => navigateTo(c.dataset.nav)));
 }
 function renderInfo() {
   view.innerHTML = `<div class="page-info"><p class="section-title">选择功能</p><div class="info-cards"><div class="info-card" data-nav="info/notes"><div class="info-card-dot notes"></div><div class="info-card-body"><h4>信息记载</h4><p>便签墙 — 像在墙上贴便签一样记录碎片想法</p></div><span class="info-card-arrow">›</span></div><div class="info-card" data-nav="info/reply"><div class="info-card-dot reply"></div><div class="info-card-body"><h4>信息回复</h4><p>AI 对话，解答学习疑问</p></div><span class="info-card-arrow">›</span></div><div class="info-card" data-nav="info/collect"><div class="info-card-dot collect"></div><div class="info-card-body"><h4>信息收集</h4><p>搜集、整理外部信息，构建知识体系</p></div><span class="info-card-arrow">›</span></div></div></div>`;
   view.querySelectorAll('.info-card').forEach(c => c.addEventListener('click', () => navigateTo(c.dataset.nav)));
 }
-function renderPlaceholder(title, desc, icon) { view.innerHTML = `<div class="page-placeholder"><div class="ph-icon">${icon||'🚧'}</div><h3>${title}</h3><p>${desc}</p></div>`; }
+function renderPlaceholder(title, desc, icon) { view.innerHTML = `<div class="page-placeholder"><div class="ph-icon">${icon||'<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>'}</div><h3>${title}</h3><p>${desc}</p></div>`; }
 
 // ═══ 便签墙 ═══
 function renderWall() {
